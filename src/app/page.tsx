@@ -26,7 +26,7 @@ const Topics = ()=>{
   return (
     <section className={'flex flex-col gap-2 mt-10'}>
       <h5 className="text-xl font-bold dark:text-white">Topik Data</h5>
-      <div className={'grid grid-cols-2 lg:grid-cols-4'}>
+      <div className={'grid grid-cols-1 lg:grid-cols-4'}>
         <TopicItem href={'/legislasi'} description={'Data terkait Penyusunan Peraturan perundang-undangan, progres, dan kinerja K/L Pemrakarsa'}>
           Perencanaan Hukum Nasional
         </TopicItem>
