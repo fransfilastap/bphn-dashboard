@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import Container from '@/components/Container'
 
 
-export const dynamicParams = true;
+export const dynamic = 'force-dynamic';
 
 export default function Layout({children}:{children:ReactNode}){
   return (

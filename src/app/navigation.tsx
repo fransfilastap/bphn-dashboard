@@ -10,7 +10,7 @@ export default function Navigation() {
       <Container className={'w-full flex flex-col px-6 py-3 border-b border-b-gray-50'}>
         <div className={'flex flex-row justify-between '}>
           <Logo/>
-          <nav className={'header-nav'}>
+          <nav className={'header-nav hidden lg:block'}>
             <ul>
               <li><NavLink href={'/'}>Beranda</NavLink></li>
               <li><NavLink href={'/about'}>Tentang Kami</NavLink></li>
