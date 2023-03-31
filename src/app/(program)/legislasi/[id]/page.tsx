@@ -5,59 +5,60 @@ import Container from '@/components/Container'
 import Detail from '@/app/(program)/legislasi/[id]/detail'
 import { notFound } from 'next/navigation'
 import { AxiosError } from 'axios'
-import { Task } from '@/schema'
 
-export async function generateStaticParams() {
-  const listOfTask = await tasks()
-  return listOfTask.data.data.map((e:Task,i:number)=>(
-    {
-      id: e.id
-    }
-  ))
-}
 
 export async function generateMetadata({
   params,
 }:{params:{id:number}}): Promise<Metadata | undefined> {
-  const task = await taskDetail(params.id);
-  if (!task) {
-    return;
+  try{
+    const task = await taskDetail(params.id);
+    const {
+      id,
+      regulation,
+    } = task.data.data;
+
+    return {
+      title: regulation.title,
+      description: regulation.title,
+      openGraph: {
+        title: regulation.title,
+        description: regulation.title,
+        type: 'article',
+        url: `http://localhost/legislasi/${id}`,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: regulation.title,
+        description: regulation.title,
+      },
+    };
   }
-
-  const {
-    id,
-    regulation,
-  } = task.data.data;
-
-  return {
-    title: regulation.title,
-    description: regulation.title,
-    openGraph: {
-      title: regulation.title,
-      description: regulation.title,
-      type: 'article',
-      url: `https://satu.bphn.go.id/legislasi/${id}`,
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: regulation.title,
-      description: regulation.title,
-    },
-  };
+  catch (e) {
+    return undefined;
+  }
 }
 
 async function getData(id:number){
-  const res =  await taskDetail(id);
-
-  if(res.status === 404)
-    return undefined;
-
-  return res.data;
+  try {
+    const res =  await taskDetail(id);
+    return res.data;
+  }catch (e:unknown) {
+    if(e instanceof AxiosError){
+      if(e.status===404)
+      {
+        return undefined
+      }
+    }
+  }
 }
 
 export default async function DetailPage({params}:{params:{id:number}}) {
   const {id} = params
   const task = await getData(params.id)
+
+  if(!task) {
+    notFound()
+  }
 
   const {
     program,

@@ -1,8 +1,14 @@
 import LegislationTable from '@/app/(program)/legislasi/table'
 import type { Metadata } from 'next'
 import Breadcrumb from '@/app/breadcrumb'
-import { tasks } from '@/repositories/legislasirepo'
+import { programs, tasks, TasksQueryParams } from '@/repositories/legislasirepo'
 import Container from '@/components/Container'
+import SearchBar from '@/app/(program)/legislasi/search-bar'
+import { notFound } from 'next/navigation'
+import { AxiosError } from 'axios'
+import Pagination from '@/app/(program)/legislasi/pagination'
+import { Suspense } from 'react'
+import ProgramSelect from '@/app/(program)/legislasi/program-select'
 
 
 export const metadata:Metadata = {
@@ -10,20 +16,58 @@ export const metadata:Metadata = {
   description: 'Data terkait Penyusunan Peraturan perundang-undangan, progres, dan kinerja K/L Pemrakarsa'
 }
 
-async function getData( props:{type?: number, department?: number, year?:number, page?:number|undefined}){
-  return await tasks(props)
+async function getData(params?:TasksQueryParams){
+
+  try{
+    const response = await tasks(params)
+    return response
+  }catch (e:unknown) {
+    if(e instanceof AxiosError){
+      if(e.status===404)
+      {
+        return undefined
+      }
+    }
+  }
+}
+
+async function getPrograms(){
+
+  try{
+    const response = await programs()
+    return response.data
+  }catch (error) {
+    if(error instanceof AxiosError){
+      if(error.status===404)
+      {
+        return undefined
+      }
+    }
+  }
 }
 
 export default async function LegislationPage({
   searchParams,
-}:{searchParams:{type?: number, department?: number, year?:number, page?:number|undefined}}){
-  const {page,type,}= searchParams
-  const data = await getData({page,type})
+}:{searchParams:TasksQueryParams}){
+
+  const data = await getData(searchParams)
+  const programs = await getPrograms();
+
+  if(!data){
+    notFound()
+  }
 
   return (
     <Container className={'flex flex-col gap-3'}>
       <Breadcrumb links={[{url:'/legislasi',label:'Perencanaan Hukum Nasional'}]}/>
-      <LegislationTable data={data.data}/>
+      <div className={'flex flex-col lg:flex-row gap-2 justify-around bg-white/30 border border-gray-200 shadow backdrop-blur-md rounded-md p-2 sticky top-[100px] z-10'}>
+        <SearchBar />
+        <ProgramSelect programs={programs!.data}/>
+      </div>
+      <Suspense fallback={<p>Loading</p>}>
+        <LegislationTable data={data.data}/>
+      </Suspense>
+      <Pagination data={data.data.meta} />
     </Container>
   )
 }
