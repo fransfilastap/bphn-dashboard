@@ -20,13 +20,24 @@ const TasksQueryParamsMap:Record<string, string> = {
 
 export interface  TasksQueryParams{
   type?: number
+  label?:string
+  program?:number
   department?: number
   year?:number,
   page?:number
 }
 export const tasks = async (params?:TasksQueryParams):Promise<AxiosResponse> => {
+
+  const urlSearchParams = new URLSearchParams();
+  if(params?.year) urlSearchParams.set('filter[programs.year]',`${params.year}`);
+  if(params?.page) urlSearchParams.set('page',`${params.page}`);
+  if(params?.program) urlSearchParams.set(`filter[program_id]`,`${params.program}`);
+  if(params?.type) urlSearchParams.set('filter[programs.program_type_id]',`${params.type}`);
+  if(params?.department) urlSearchParams.set(`filter[department_id]`,`${params.department}`);
+  if(params?.label) urlSearchParams.set(`filter[regulations.label]`,`${params.label}`);
+
   return await axiosInstance.get<Response<Task[]>>('tasks',{
-    params: params
+    params: urlSearchParams
   });
 }
 

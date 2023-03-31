@@ -27,7 +27,7 @@ export default function SearchBar() {
 
 
   const debounceSearch =  debounce(async (criteria:string) => {
-    router.push(pathname+'?'+createQueryString('filter[regulations.label]',criteria))
+    router.push(pathname+'?'+createQueryString('label',criteria))
   }, 300);
 
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {

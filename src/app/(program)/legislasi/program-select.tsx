@@ -24,7 +24,7 @@ export default function ProgramSelect ({programs}:{programs:Program[]}) {
   );
 
   const programChangeHandler = (e:React.ChangeEvent<HTMLSelectElement>)=>{
-    router.push(pathname+'?'+createQueryString(`filter[program_id]`,`${e.target.value}`))
+    router.push(pathname+'?'+createQueryString(`program`,`${e.target.value}`))
   }
 
   return (

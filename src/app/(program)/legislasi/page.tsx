@@ -64,9 +64,7 @@ export default async function LegislationPage({
         <SearchBar />
         <ProgramSelect programs={programs!.data}/>
       </div>
-      <Suspense fallback={<p>Loading</p>}>
-        <LegislationTable data={data.data}/>
-      </Suspense>
+      <LegislationTable data={data.data}/>
       <Pagination data={data.data.meta} />
     </Container>
   )

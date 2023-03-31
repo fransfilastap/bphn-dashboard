@@ -10,11 +10,7 @@ export interface LegislationTableProps extends ComponentPropsWithoutRef<"table">
   data: Response<Task[]>
 }
 
-
-
 const LegislationTable:FunctionComponent<LegislationTableProps> = ({ data, ...rest }:LegislationTableProps)=>{
-
-
 
   return (
     <>
