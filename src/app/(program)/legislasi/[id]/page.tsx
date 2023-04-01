@@ -5,6 +5,9 @@ import Container from '@/components/Container'
 import Detail from '@/app/(program)/legislasi/[id]/detail'
 import { notFound } from 'next/navigation'
 import { AxiosError } from 'axios'
+import Back from '@/app/back'
+import { Suspense } from 'react'
+import History, { LoadingSkeleton } from '@/app/(program)/legislasi/[id]/history'
 
 
 export async function generateMetadata({
@@ -75,12 +78,18 @@ export default async function DetailPage({params}:{params:{id:number}}) {
         <Container>
           <Breadcrumb links={links}/>
         </Container>
-        <section className={'bg-white border-t border-b border-b-gray-200 border-t-gray-200 p-5'}>
-          <Container className={'flex flex-col gap-7'}>
-            <h3 className="text-3xl font-[600] dark:text-white">{regulation.title}</h3>
-            <div className={'grid grid-cols-1 lg:grid-cols-2'}>
-              <Detail department={department} regulation={regulation} program={program} stage={stage} performaceColor={performance_appearance}/>
-            </div>
+        <section className={'bg-white border-t border-b border-b-gray-200 border-t-gray-200 p-2 lg:p-5'}>
+          <Container className={'flex flex-col gap-2'}>
+            <Back/>
+              <p className={'py-2 px-3 max-w-max text-slate-800 font-[500] text-sm'}>{program.name}</p>
+              <h3 className="text-xl lg:text-3xl font-[600] dark:text-white mb-10">{regulation.title}</h3>
+              <div className={'grid grid-cols-1 lg:grid-cols-2 gap-2'}>
+                <Detail department={department} regulation={regulation} program={program} stage={stage} performaceColor={performance_appearance}/>
+                <Suspense fallback={<LoadingSkeleton/>}>
+                  {/* @ts-expect-error Server Component */}
+                  <History id={id}/>
+                </Suspense>
+              </div>
           </Container>
         </section>
     </div>

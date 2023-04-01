@@ -43,6 +43,7 @@ export interface Task {
   program: Program
   department: Department
   regulation: Regulation
+  history: RegulationHistory[]
   stage: Stage
   performance_appearance: string
   performance_statement: string
@@ -55,6 +56,14 @@ export interface Department {
   name: string
 }
 
+export interface ProgramType {
+  id: number
+  uuid: string
+  type: string
+  label: string
+  desc: string
+}
+
 export interface Regulation {
   id: number
   type: string
@@ -62,6 +71,19 @@ export interface Regulation {
   material: string
   note: string
   initiative: string
+}
+
+export interface RegulationHistory {
+  id: number
+  type: string
+  title: string
+  material: string
+  note: string
+  initiative: string
+  year: string
+  program_name: string
+  stage: Stage
+  updated_at: string
 }
 
 export interface Stage {

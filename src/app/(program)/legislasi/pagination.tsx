@@ -2,6 +2,7 @@
 import React, { useCallback } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Meta } from '@/schema'
+import useQueryString from '@/hooks/useQueryString'
 
 type PaginationProps = {
   data: Meta
@@ -9,28 +10,16 @@ type PaginationProps = {
 export default function Pagination(props:PaginationProps){
 
   const {from,to,current_page,total} = props.data
+  const [createQueryString] = useQueryString();
 
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams);
-      params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams],
-  );
   const prevPageChangeHandler = (e:React.MouseEvent)=>{
     if(from === 1) return;
-    router.push(pathname+'?'+createQueryString('page',`${current_page-1}`))
+    createQueryString('page',`${current_page-1}`);
   }
 
   const nextPageChangeHandler =  (e:React.MouseEvent)=>{
     if(current_page === to) return;
-    router.push(pathname+'?'+createQueryString('page',`${current_page+1}`))
+    createQueryString('page',`${current_page+1}`);
   }
 
   return (

@@ -1,5 +1,6 @@
 import Container from '@/components/Container'
 import Logo from '@/app/logo'
+import Link from 'next/link'
 
 export default function Footer() {
   return (
@@ -9,10 +10,10 @@ export default function Footer() {
         <div className='flex flex-row items-center justify-between w-full gap-2 lg:flex-row'>
 
           <p className='flex flex-col text-[0.9em] text-center lg:text-left'>
-            Copyright &copy; {new Date().getFullYear()} BPHN.go.id. All rights
+            Copyright &copy; {new Date().getFullYear()} fransfp.dev. All rights
             reserved{' '}
             <span className='text-gray-600'>
-              Developed and Maintained by Sub Bagian Rumah Tangga
+              Disclaimer: The data collected from testing server.
             </span>
           </p>
         </div>

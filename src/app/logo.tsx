@@ -1,5 +1,7 @@
+import Link from 'next/link'
+
 export default function Logo() {
   return (
-    <h5 className={'font-bold'}>BPHN Public Dashboard</h5>
+    <Link href={'/'} className={'font-bold'}>Data Legislasi</Link>
   )
 }

@@ -1,14 +1,16 @@
 import LegislationTable from '@/app/(program)/legislasi/table'
 import type { Metadata } from 'next'
 import Breadcrumb from '@/app/breadcrumb'
-import { programs, tasks, TasksQueryParams } from '@/repositories/legislasirepo'
+import { programs, programTypes, tasks, TasksQueryParams } from '@/repositories/legislasirepo'
 import Container from '@/components/Container'
 import SearchBar from '@/app/(program)/legislasi/search-bar'
 import { notFound } from 'next/navigation'
 import { AxiosError } from 'axios'
 import Pagination from '@/app/(program)/legislasi/pagination'
 import { Suspense } from 'react'
-import ProgramSelect from '@/app/(program)/legislasi/program-select'
+import ProgramTypeSelect from '@/app/(program)/legislasi/program-type-select'
+import YearSelect from '@/app/(program)/legislasi/year-select'
+import ClearFilter from '@/app/clear-filter'
 
 
 export const metadata:Metadata = {
@@ -31,10 +33,25 @@ async function getData(params?:TasksQueryParams){
   }
 }
 
-async function getPrograms(){
+async function getPrograms(type?:number){
 
   try{
-    const response = await programs()
+    const response = await programs(type)
+    return response.data
+  }catch (error) {
+    if(error instanceof AxiosError){
+      if(error.status===404)
+      {
+        return undefined
+      }
+    }
+  }
+}
+
+async function getProgramTypes(){
+
+  try{
+    const response = await programTypes()
     return response.data
   }catch (error) {
     if(error instanceof AxiosError){
@@ -51,8 +68,7 @@ export default async function LegislationPage({
 }:{searchParams:TasksQueryParams}){
 
   const data = await getData(searchParams)
-  const programs = await getPrograms();
-
+  const types = await getProgramTypes()
   if(!data){
     notFound()
   }
@@ -60,12 +76,18 @@ export default async function LegislationPage({
   return (
     <Container className={'flex flex-col gap-3'}>
       <Breadcrumb links={[{url:'/legislasi',label:'Perencanaan Hukum Nasional'}]}/>
-      <div className={'flex flex-col lg:flex-row gap-2 justify-around bg-white/30 border border-gray-200 shadow backdrop-blur-md rounded-md p-2 sticky top-[100px] z-10'}>
+      <div className={'flex flex-col lg:flex-row gap-2 justify-around bg-white/30 border border-gray-200 shadow backdrop-blur-sm rounded-md p-2 sticky top-[100px] z-10'}>
         <SearchBar />
-        <ProgramSelect programs={programs!.data}/>
+        <ProgramTypeSelect types={types!.data}/>
+        <YearSelect/>
       </div>
-      <LegislationTable data={data.data}/>
-      <Pagination data={data.data.meta} />
+      <div className={'w-full'}>
+        <ClearFilter/>
+      </div>
+      <Suspense fallback={<p>Updating...</p>}>
+        <LegislationTable data={data.data}/>
+        <Pagination data={data.data.meta} />
+      </Suspense>
     </Container>
   )
 }

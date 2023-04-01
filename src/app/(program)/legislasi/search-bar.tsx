@@ -2,40 +2,39 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { debounce } from 'lodash'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import useQueryString from '@/hooks/useQueryString'
 
 export default function SearchBar() {
 
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams()!;
-  const searchRef = useRef<HTMLInputElement|null>(null)
+  const params = useSearchParams()
 
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams);
-      params.set(name, value);
-      if(params.has('page') && params.get('page') !== '1'){
-        params.set('page','1');
-      }
-
-      return params.toString();
-    },
-    [searchParams],
-  );
-
+  const [createQueryString,] = useQueryString({
+    paginationReset: {
+      query: 'page'
+    }
+  })
+  const searchRef = useRef<HTMLFormElement|null>(null)
 
   const debounceSearch =  debounce(async (criteria:string) => {
-    router.push(pathname+'?'+createQueryString('label',criteria))
+    const cleanedCriteria = criteria.trim()
+    createQueryString('label',cleanedCriteria)
   }, 300);
 
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     debounceSearch(e.target.value)
   }
 
+
+  useEffect(()=>{
+    if(!params.has('label')){
+      searchRef.current?.reset()
+    }
+  },[params])
+
+
   return (
-    <div className="flex flex-1 items-center">
+    <form ref={searchRef} className="flex flex-1 items-center">
       <label htmlFor="search" className="sr-only">Pencarian</label>
       <div className="relative w-full">
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -46,10 +45,10 @@ export default function SearchBar() {
                   clipRule="evenodd"></path>
           </svg>
         </div>
-        <input onChange={handleChange} ref={searchRef} type="text" id="search"
+        <input onChange={handleChange} type="text" id="search"
                className="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                placeholder="Cari judul rancangan peraturan..." required/>
       </div>
-    </div>
+    </form>
   )
 }

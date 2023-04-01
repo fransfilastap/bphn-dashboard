@@ -4,7 +4,7 @@
 
 @layer base {
     body{
-        @apply bg-gray-100 antialiased
+        @apply bg-gray-100 antialiased;
     }
 
     main{
@@ -13,8 +13,9 @@
 }
 
 @layer components {
+
     .header{
-        @apply sticky top-0 bg-white/30 backdrop-blur-2xl border-b border-b-gray-300 flex flex-col z-10
+        @apply sticky top-0 bg-white/10 backdrop-blur-md border-b border-b-gray-300 flex flex-col z-10
     }
 
     .header-nav ul{
@@ -22,6 +23,6 @@
     }
 
     .header-nav ul li{
-        @apply text-[0.93em] font-[350]
+        @apply text-slate-900 text-[0.93em] font-[350]
     }
 }

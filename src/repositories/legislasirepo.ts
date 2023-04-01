@@ -1,6 +1,6 @@
 import Axios, { AxiosResponse } from 'axios'
 import { LEGISLATION_API, LEGISLATION_API_TOKEN } from '@/config/env'
-import { Program, Response, Task } from '@/schema'
+import { Program, ProgramType, Response, Task } from '@/schema'
 
 const axiosInstance = Axios.create({
   baseURL: `${LEGISLATION_API}`,
@@ -9,6 +9,8 @@ const axiosInstance = Axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+export default axiosInstance;
 
 
 const TasksQueryParamsMap:Record<string, string> = {
@@ -41,8 +43,17 @@ export const tasks = async (params?:TasksQueryParams):Promise<AxiosResponse> => 
   });
 }
 
-export const programs = async ()=>{
-  return await axiosInstance.get<Response<Program[]>>('programs')
+export const programs = async (type?:number)=>{
+  const searchParams = new URLSearchParams()
+  if(type) searchParams.set(`filter[type]`,`${type}`)
+  return await axiosInstance.get<Response<Program[]>>('programs',{
+    params: searchParams
+  })
+}
+
+
+export const programTypes = async ()=>{
+  return await axiosInstance.get<Response<ProgramType[]>>('types')
 }
 
 export const taskDetail = async (id:number) => {
