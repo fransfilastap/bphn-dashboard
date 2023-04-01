@@ -19,7 +19,7 @@ export default function YearSelect () {
     const startYear = 2021
     const currentYear = new Date().getFullYear()
     const diff = currentYear - startYear;
-    return Array.from({length: diff}, (_, index) => startYear + 1);
+    return Array.from({length: diff+1}, (_, index) => startYear + index);
   },[])
 
   return (

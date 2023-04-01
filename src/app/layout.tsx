@@ -8,10 +8,10 @@ import Footer from '@/app/Footer'
 
 export const metadata:Metadata = {
   title: {
-    default: 'BPHN Public Dashboard',
-    template: '%s | Badan Pembinaan Hukum Nasional'
+    default: 'Data Legislasi',
+    template: '%s | a NextJS 13 appDir demo'
   },
-  description: 'Public Dashboard terkait Pembinaan Hukum Nasional',
+  description: 'Data Legislasi - a NextJS 13 appDir demo (beta)',
 }
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
