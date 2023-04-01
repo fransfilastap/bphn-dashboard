@@ -7,7 +7,7 @@ export interface QueryStringOptions {
   }
 }
 const useQueryString = (options?:QueryStringOptions)=>{
-  const [state,setState] = useState<string>(null)
+  const [state,setState] = useState<string|null>(null)
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams()
@@ -40,11 +40,11 @@ const useQueryString = (options?:QueryStringOptions)=>{
     [searchParams],
   );
 
-  const clearQueryString = ()=>{
+  const resetQueryString = ()=>{
     router.push(pathname);
   }
 
-  return [setQueryString,clearQueryString];
+  return [setQueryString,resetQueryString];
 }
 
 export default useQueryString;
